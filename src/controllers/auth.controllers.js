@@ -18,7 +18,7 @@ const generateAccessAndRefreshTokens = async(userId) =>{
         await user.save({validateBeforeSave: false})
         return {accessToken,refreshToken}   
     } catch(error){
-        throw new ApiError(500,"something went wrong while generating token ")
+        throw new ApiError(500,"something went wrong while generating token")
     }
 }
 
@@ -30,14 +30,15 @@ const registerUser = asyncHandler(async(req,res) =>{
     })
 
     if(exitedUser){
-        throw new ApiError(409,"User already exist ",[]);
+        throw new ApiError(409,"User already exists",[]);
     }
 
     const user = await User.create({
         email,
         password,
         username,
-        isEmailVerified: false
+        // note: schema uses `isEmailedVerified` (typo preserved in model) so we match that
+        isEmailedVerified: false
     })
 
     const {unHashedToken,HashedToken,TokenExpiry} = user.generateTemporaryToken();
@@ -258,7 +259,7 @@ const refreshAccessToken = asyncHandler(async(req,res)=>{
         )
     
     }catch(error){
-        throw new ApiError(401,"invaild refresh Token");
+        throw new ApiError(401,"invalid refresh token");
     }
 
 })
@@ -327,7 +328,7 @@ const resetForgotPassword = asyncHandler(async(req,res) =>{
 
 })
 
-const changeCurentPassword = asyncHandler(async(req,res) =>{
+const changeCurrentPassword = asyncHandler(async(req,res) =>{
     
     const {oldPassword,newPassword} = req.body
 
@@ -336,13 +337,13 @@ const changeCurentPassword = asyncHandler(async(req,res) =>{
     const isPasswordValid = await user.isPasswordCorrect(oldPassword)
 
     if(!isPasswordValid){
-        throw new ApiError(400,"old password invalid ")
+        throw new ApiError(400,"old password invalid")
     }
 
     user.password = newPassword
     await user.save({validateBeforeSave: false})
 
-    return res.status(200).json(new ApiResponse(200,{},"password changes successfully "))
+    return res.status(200).json(new ApiResponse(200,{},"password changed successfully"))
 })
 
-export {registerUser, login,logoutUser, getCurrentUser,verifyEmail,resendEmailVerification,refreshAccessToken,forgotPassword,changeCurentPassword,resetForgotPassword};      
+export {registerUser, login,logoutUser, getCurrentUser,verifyEmail,resendEmailVerification,refreshAccessToken,forgotPassword,changeCurrentPassword,resetForgotPassword};      

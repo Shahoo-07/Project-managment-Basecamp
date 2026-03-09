@@ -53,7 +53,7 @@ const emailVerificationMailgenContent = (username, verificationUrl) => {
     }
 };
 
-const forgotPasswordgenContent = (username, passwordReseturl) => {
+const forgotPasswordMailgenContent = (username, passwordReseturl) => {
     return {
         body: {
             name: username,
@@ -73,5 +73,6 @@ const forgotPasswordgenContent = (username, passwordReseturl) => {
 
 export {
     emailVerificationMailgenContent,
-    forgotPasswordgenContent,sendEmail
+    forgotPasswordMailgenContent,
+    sendEmail
 };
